@@ -55,15 +55,13 @@ def create_Handler_class(QtCore, qevent_type):
         Handles rx events posted on the qt application main loop and
         triggers QTimers in the main thread.
 
-        RxHandler object is set as a child of the qt application and installed
-        as an event filter.
+        RxHandler object is set as a child of the qt application.
         """
 
         RxEvent = RxEvent_
 
         def __init__(self, qapplication):
             QtCore.QObject.__init__(self, qapplication)
-            qapplication.installEventFilter(self)
 
             def schedule_now(args):
                 invoke_action, timer_ptr = args
@@ -102,15 +100,13 @@ def create_Handler_class(QtCore, qevent_type):
                     DISPOSE: dispose
                     }
 
-        def eventFilter(self, watcher, event):
-            if event.type() != qevent_type:
-                return False
-
+        def event(self, event):
             scheduling = event.scheduling
             args = event.args
 
             self.dispatcher[scheduling](args)
             return True
+
 
     return RxHandler
 
