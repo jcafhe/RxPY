@@ -17,7 +17,7 @@ timing informations and the function to be invoked.
 Custom Qt classes (RxEvent & RxHandler) are defined on runtime to avoid import
 issues.
 
-Notes:
+Limitations:
     Disposables can't be disposed after the qt main loop exit (i.e. return
     of app.exec_()).
 
@@ -51,8 +51,6 @@ def create_RxHandler_class(QtCore):
         """
         Handles rx events posted on the qt application main loop and
         triggers QTimers in the main thread.
-
-        RxHandler object is set as a child of the qt application.
         """
 
         def __init__(self, parent):
@@ -72,7 +70,6 @@ def create_RxHandler_class(QtCore):
 
             def schedule_periodic(args):
                 invoke_action, timer_ptr, period = args
-                print(period)
                 qtimer = QtCore.QTimer()
                 qtimer.setSingleShot(False)
                 qtimer.setInterval(period)
@@ -82,7 +79,6 @@ def create_RxHandler_class(QtCore):
 
             def dispose(args):
                 timer_ptr, = args
-                print('receive dispose')
                 try:
                     timer_ptr[0].stop()
                     log2.debug('dispose timer_ptr:{}'.format(timer_ptr))
@@ -110,7 +106,6 @@ def create_RxHandler_class(QtCore):
 def QtScheduler(QtCore):
     """A scheduler for a PyQt4/PyQt5/PySide event loop."""
     global glob_post_function
-    global glob_handler
 
     # protect the creation of Handler from different threads
     with config['concurrency'].RLock():
