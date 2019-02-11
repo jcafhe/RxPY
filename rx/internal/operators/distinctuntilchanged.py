@@ -1,5 +1,5 @@
 from typing import Callable
-from rx.core import Observable
+from rx.internal import Observable
 from rx.internal.basic import identity, default_comparer
 
 

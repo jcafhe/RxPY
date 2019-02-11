@@ -2,9 +2,8 @@ import logging
 from typing import Callable
 
 from rx import empty
-from rx.core import Observable, typing
+from rx.internal import Observable, typing, noop
 from rx.internal.utils import add_ref
-from rx.internal import noop
 from rx.disposable import SingleAssignmentDisposable, SerialDisposable, CompositeDisposable, RefCountDisposable
 from rx.subjects import Subject
 from rx import operators as ops

@@ -1,8 +1,7 @@
 from typing import Callable
 
 from rx import from_future
-from rx.internal import noop
-from rx.core import Observable
+from rx.internal import Observable, noop
 from rx.disposable import CompositeDisposable
 from rx.internal.utils import is_future
 

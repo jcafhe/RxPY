@@ -1,6 +1,6 @@
 from typing import Any, Callable
-from rx.core import Observable
-from rx.core.typing import Disposable
+from rx.internal import Observable
+from rx.internal.typing import Disposable
 
 
 def _default_if_empty(default_value: Any = None) -> Callable[[Observable], Observable]:

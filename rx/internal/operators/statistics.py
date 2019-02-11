@@ -1,4 +1,4 @@
-from rx.core import ObservableBase, Observable
+from rx.internal import ObservableBase, Observable
 import math
 
 

@@ -1,6 +1,6 @@
 from typing import Callable
-from rx.core import Observable
-from rx.core.typing import Scheduler
+from rx.internal import Observable
+from rx.internal.typing import Scheduler
 from rx.disposable import SingleAssignmentDisposable, SerialDisposable, ScheduledDisposable
 
 

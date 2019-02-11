@@ -1,11 +1,10 @@
 from typing import Callable, Any
 
+from rx import operators as ops
+from rx.internal import Observable, pipe
 from rx.internal.basic import identity
 from rx.internal.utils import infinite
-
-from rx import operators as ops
-from rx.core import Observable, pipe
-from rx.core.typing import Mapper, MapperIndexed, Observer, Disposable, Scheduler
+from rx.internal.typing import Mapper, MapperIndexed, Observer, Disposable, Scheduler
 
 
 # pylint: disable=redefined-builtin

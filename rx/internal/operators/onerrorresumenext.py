@@ -1,7 +1,7 @@
 from typing import Callable
 
 import rx
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _on_error_resume_next(second: Observable) -> Callable[[Observable], Observable]:

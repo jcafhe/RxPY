@@ -1,7 +1,7 @@
 from typing import Callable
 
 import rx
-from rx.core import Observable
+from rx.internal import Observable
 
 
 

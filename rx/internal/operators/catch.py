@@ -1,7 +1,7 @@
 from typing import Callable
 
 import rx
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
 from rx.disposable import SingleAssignmentDisposable, SerialDisposable
 from rx.internal.utils import is_future
 

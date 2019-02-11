@@ -2,7 +2,7 @@ from typing import Callable
 
 import rx
 from rx import operators as ops
-from rx.core import Observable, GroupedObservable
+from rx.internal import Observable, GroupedObservable
 
 
 def _group_by(key_mapper, element_mapper=None) -> Callable[[Observable], Observable]:

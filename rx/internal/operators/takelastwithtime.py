@@ -1,5 +1,5 @@
 from typing import Callable
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
 from rx.concurrency import timeout_scheduler
 
 

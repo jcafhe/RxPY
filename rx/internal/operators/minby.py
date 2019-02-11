@@ -1,6 +1,6 @@
 from typing import Callable
 
-from rx.core import Observable
+from rx.internal import Observable
 from rx.internal.basic import default_sub_comparer
 
 def extrema_by(source, key_mapper, comparer):

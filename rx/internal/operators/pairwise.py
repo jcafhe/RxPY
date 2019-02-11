@@ -1,6 +1,6 @@
 from typing import Callable
 
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _pairwise() -> Callable[[Observable], Observable]:

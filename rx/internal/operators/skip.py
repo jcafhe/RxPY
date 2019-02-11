@@ -1,7 +1,6 @@
 from typing import Callable
 
-from rx.core import Observable
-from rx.internal import ArgumentOutOfRangeException
+from rx.internal import Observable, ArgumentOutOfRangeException
 
 
 def _skip(count: int) -> Callable[[Observable], Observable]:

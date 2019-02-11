@@ -2,7 +2,7 @@ from typing import Any, Callable
 
 from rx import defer, operators as ops
 from rx.internal.utils import NotSet
-from rx.core import Observable
+from rx.internal import Observable
 
 def _scan(accumulator: Callable[[Any, Any], Any], seed: Any = NotSet) -> Callable[[Observable], Observable]:
     has_seed = seed is not NotSet

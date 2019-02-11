@@ -3,7 +3,7 @@ from typing import Union, Callable
 
 import rx
 from rx import operators as ops
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
 
 
 def _delay_subscription(duetime: typing.AbsoluteOrRelativeTime, scheduler: typing.Scheduler = None

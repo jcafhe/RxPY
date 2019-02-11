@@ -2,7 +2,7 @@ import sys
 from typing import Callable
 
 import rx
-from rx.core import Observable
+from rx.internal import Observable
 from rx.internal.utils import infinite
 
 def _repeat(repeat_count=None) -> Callable[[Observable], Observable]:

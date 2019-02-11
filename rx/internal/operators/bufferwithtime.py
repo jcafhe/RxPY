@@ -1,7 +1,7 @@
 from typing import Callable
 
 from rx import operators as ops
-from rx.core import Observable, pipe, typing
+from rx.internal import Observable, pipe, typing
 
 
 def _buffer_with_time(timespan: typing.RelativeTime, timeshift: typing.RelativeTime = None,

@@ -2,8 +2,8 @@ import collections
 from typing import Callable
 
 from rx import from_, from_future, operators as ops
-from rx.core import Observable
-from rx.core.typing import Mapper, MapperIndexed
+from rx.internal import Observable
+from rx.internal.typing import Mapper, MapperIndexed
 from rx.internal.utils import is_future
 
 

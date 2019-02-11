@@ -1,7 +1,7 @@
 from typing import Union, Callable
 from datetime import timedelta
 
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
 from rx.concurrency import timeout_scheduler
 
 

@@ -1,8 +1,8 @@
 from typing import Callable, Union, Any
 from datetime import timedelta
 
-from rx.core.typing import Disposable
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
+from rx.internal.typing import Disposable
 from rx.disposable import CompositeDisposable, SingleAssignmentDisposable, SerialDisposable
 from rx.concurrency import timeout_scheduler
 

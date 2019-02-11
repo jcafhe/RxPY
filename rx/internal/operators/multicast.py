@@ -1,7 +1,7 @@
 from typing import Union, Callable
 
-from rx.core import Observable, ConnectableObservable
-from rx.core.typing import Subject, Mapper
+from rx.internal import Observable, ConnectableObservable
+from rx.internal.typing import Subject, Mapper
 from rx.disposable import CompositeDisposable
 
 

@@ -1,5 +1,5 @@
 from typing import Callable
-from rx.core import Observable
+from rx.internal import Observable
 from rx.internal.basic import default_comparer
 
 def array_index_of_comparer(array, item, comparer):

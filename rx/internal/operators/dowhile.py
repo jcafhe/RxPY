@@ -1,7 +1,7 @@
 from typing import Callable, Any
 
 from rx import operators as ops
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _do_while(condition: Callable[[Any], bool]) -> Callable[[Observable], Observable]:

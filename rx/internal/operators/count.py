@@ -1,6 +1,6 @@
 from typing import Callable
-from rx.core import Observable, pipe
-from rx.core.typing import Predicate
+from rx.internal import Observable, pipe
+from rx.internal.typing import Predicate
 
 from rx import operators as ops
 

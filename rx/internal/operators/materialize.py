@@ -1,6 +1,6 @@
 from typing import Callable
-from rx.core import Observable
-from rx.core.notification import OnNext, OnError, OnCompleted
+from rx.internal import Observable
+from rx.internal.notification import OnNext, OnError, OnCompleted
 
 
 def _materialize() -> Callable[[Observable], Observable]:

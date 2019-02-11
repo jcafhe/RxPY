@@ -2,8 +2,7 @@ from typing import Callable, Any
 import itertools
 
 import rx
-from rx.core import Observable
-
+from rx.internal import Observable
 from rx.internal.utils import is_future, infinite
 
 

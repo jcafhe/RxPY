@@ -1,7 +1,7 @@
 from typing import List
 
-from rx.core import Observable
-from rx.core.typing import Scheduler, RelativeTime
+from rx.internal import Observable
+from rx.internal.typing import Scheduler, RelativeTime
 from rx.concurrency import NewThreadScheduler
 
 new_thread_scheduler = NewThreadScheduler()

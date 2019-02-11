@@ -1,7 +1,7 @@
 from typing import Any, Callable
 
 from rx import operators as ops
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _pluck(key: Any) -> Callable[[Observable], Observable]:

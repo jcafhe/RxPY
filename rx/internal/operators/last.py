@@ -1,7 +1,7 @@
 from typing import Callable
 from rx import operators
-from rx.core import Observable
-from rx.core.typing import Predicate
+from rx.internal import Observable
+from rx.internal.typing import Predicate
 
 from .lastordefault import last_or_default_async
 

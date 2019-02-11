@@ -1,6 +1,6 @@
 from typing import Callable
 from rx import operators as ops
-from rx.core import Observable, pipe
+from rx.internal import Observable, pipe
 
 from .firstordefault import _first_or_default_async
 

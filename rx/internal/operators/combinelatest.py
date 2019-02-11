@@ -1,7 +1,7 @@
 from typing import Any, Callable, Iterable, Union, List
 
 import rx
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
 
 
 def _combine_latest(*others: Observable) -> Callable[[Observable], Observable]:

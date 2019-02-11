@@ -1,5 +1,4 @@
-from rx.core import Observable
-from rx.internal import noop
+from rx.internal import Observable, noop
 
 
 def _ignore_elements() -> Observable:

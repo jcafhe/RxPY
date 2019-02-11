@@ -1,7 +1,7 @@
 from typing import Callable
 
-from rx.core import Observable
-from rx.core.observable import BlockingObservable
+from rx.internal import Observable
+from rx.internal.observable import BlockingObservable
 
 
 def _to_blocking() -> Callable[[Observable], BlockingObservable]:

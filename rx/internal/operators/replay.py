@@ -1,8 +1,8 @@
 from typing import Union, Callable
 
 from rx import operators as ops
-from rx.core import Observable, ConnectableObservable, typing
-from rx.core.typing import Scheduler, Mapper
+from rx.internal import Observable, ConnectableObservable, typing
+from rx.internal.typing import Scheduler, Mapper
 from rx.subjects import ReplaySubject
 
 

@@ -1,7 +1,7 @@
 from typing import Callable
 
-from rx.core import Observable, typing
-from rx.core.typing import Observer, Disposable
+from rx.internal import Observable, typing
+from rx.internal.typing import Observer, Disposable
 from rx.disposable import CompositeDisposable
 
 

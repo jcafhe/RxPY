@@ -1,8 +1,8 @@
 from typing import Any, Callable
 
 from rx import operators as ops
+from rx.internal import Observable, pipe
 from rx.internal.utils import NotSet
-from rx.core import Observable, pipe
 
 
 def _reduce(accumulator: Callable[[Any, Any], Any], seed: Any = NotSet) -> Callable[[Observable], Observable]:

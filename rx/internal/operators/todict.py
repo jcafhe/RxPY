@@ -1,7 +1,6 @@
 from typing import Callable, Any
 
-from rx.core import typing
-from rx.core import Observable
+from rx.internal import Observable, typing
 
 
 def _to_dict(key_mapper: Callable[[Any], Any], element_mapper: Callable[[Any], Any] = None

@@ -1,8 +1,8 @@
 from typing import List, Callable
 
 from rx import operators as ops
-from rx.core import Observable
-from rx.core.typing import Predicate, PredicateIndexed
+from rx.internal import Observable
+from rx.internal.typing import Predicate, PredicateIndexed
 
 
 def _partition(predicate: Predicate) -> Callable[[Observable], List[Observable]]:

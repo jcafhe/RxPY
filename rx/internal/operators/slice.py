@@ -1,7 +1,7 @@
 from typing import Callable
 
 from rx import operators as ops
-from rx.core import Observable
+from rx.internal import Observable
 
 # pylint: disable=redefined-builtin
 def _slice(start: int = None, stop: int = None, step: int = 1) -> Callable[[Observable], Observable]:

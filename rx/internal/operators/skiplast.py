@@ -1,4 +1,4 @@
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _skip_last(count: int) -> Observable:

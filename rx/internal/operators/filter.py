@@ -1,7 +1,7 @@
 from typing import Callable
 
-from rx.core import Observable
-from rx.core.typing import Predicate, PredicateIndexed, Scheduler, Observer, Disposable
+from rx.internal import Observable
+from rx.internal.typing import Predicate, PredicateIndexed, Scheduler, Observer, Disposable
 
 
 # pylint: disable=redefined-builtin

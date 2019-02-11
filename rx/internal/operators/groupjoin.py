@@ -3,7 +3,7 @@ from typing import Callable
 from collections import OrderedDict
 
 from rx import operators as ops
-from rx.core import Observable
+from rx.internal import Observable
 from rx.internal.utils import add_ref
 from rx.disposable import SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable
 from rx.subjects import Subject

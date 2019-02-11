@@ -1,7 +1,7 @@
 from typing import Callable
 
 from rx import operators
-from rx.core import Observable
+from rx.internal import Observable
 
 
 class AverageValue(object):

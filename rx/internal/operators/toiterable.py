@@ -1,5 +1,5 @@
 from typing import Callable
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _to_iterable() -> Callable[[Observable], Observable]:

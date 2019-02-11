@@ -1,6 +1,6 @@
 from typing import Callable
 
-from rx.core import Observable
+from rx.internal import Observable
 from rx.internal.exceptions import SequenceContainsNoElementsError
 from rx import operators as ops
 

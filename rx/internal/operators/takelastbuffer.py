@@ -1,5 +1,5 @@
 from typing import Callable
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _take_last_buffer(count: int) -> Callable[[Observable], Observable]:

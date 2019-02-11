@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Union, Callable
 
 from rx import from_future, throw
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
 from rx.disposable import CompositeDisposable, SingleAssignmentDisposable, SerialDisposable
 from rx.concurrency import timeout_scheduler
 from rx.internal.utils import is_future

@@ -1,9 +1,9 @@
 from typing import Any, Callable
 
 from rx import operators as ops
-from rx.core import Observable
+from rx.internal import Observable
 from rx.subjects import BehaviorSubject
-from rx.core.typing import Mapper
+from rx.internal.typing import Mapper
 
 
 def _publish_value(initial_value: Any, mapper: Mapper = None) -> Callable[[Observable], Observable]:

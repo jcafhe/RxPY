@@ -1,7 +1,7 @@
 from typing import Callable
 
-from rx.core import Observable
-from rx.core.observer import ObserveOnObserver
+from rx.internal import Observable
+from rx.internal.observer import ObserveOnObserver
 
 
 def _observe_on(scheduler) -> Callable[[Observable], Observable]:

@@ -1,6 +1,6 @@
 from typing import Any, Callable
 
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _take_while(predicate: Callable[[Any], Any]) -> Callable[[Observable], Observable]:

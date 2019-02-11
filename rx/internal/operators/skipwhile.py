@@ -1,7 +1,7 @@
 from typing import Callable
 
 from rx import operators as ops
-from rx.core import Observable, typing, pipe
+from rx.internal import Observable, typing, pipe
 
 
 def _skip_while(predicate: typing.Predicate) -> Callable[[Observable], Observable]:

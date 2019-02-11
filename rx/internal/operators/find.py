@@ -1,6 +1,6 @@
 from typing import Callable
-from rx.core import Observable
-from rx.core.typing import Predicate
+from rx.internal import Observable
+from rx.internal.typing import Predicate
 
 
 def _find_value(predicate: Predicate, yield_index) -> Callable[[Observable], Observable]:

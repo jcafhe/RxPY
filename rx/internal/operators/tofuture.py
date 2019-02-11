@@ -1,7 +1,7 @@
 from typing import Callable
 from asyncio import Future
 
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _to_future(future_ctor: Callable[[], Future] = None) -> Callable[[Observable], Future]:

@@ -1,7 +1,7 @@
 from typing import Callable
 import logging
 
-from rx.core import Observable
+from rx.internal import Observable
 from rx.internal.utils import add_ref
 from rx.disposable import SingleAssignmentDisposable, RefCountDisposable
 from rx.internal.exceptions import ArgumentOutOfRangeException

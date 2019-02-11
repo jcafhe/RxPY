@@ -2,7 +2,7 @@ from typing import Callable
 from datetime import datetime, timedelta
 
 from rx import operators as ops
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
 from rx.disposable import CompositeDisposable, SerialDisposable, MultipleAssignmentDisposable
 from rx.concurrency import timeout_scheduler
 

@@ -2,8 +2,7 @@ from typing import Callable
 from collections import OrderedDict
 
 from rx.operators import take
-from rx.core import Observable
-from rx.internal import noop
+from rx.internal import Observable, noop
 from rx.disposable import SingleAssignmentDisposable, CompositeDisposable
 
 

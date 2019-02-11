@@ -2,7 +2,7 @@ from typing import Any, Callable
 
 import rx
 
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _start_with(*args: Any) -> Callable[[Observable], Observable]:

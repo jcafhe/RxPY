@@ -2,7 +2,7 @@ from typing import Callable
 from collections import OrderedDict
 
 from rx import operators as ops
-from rx.core import Observable, GroupedObservable
+from rx.internal import Observable, GroupedObservable
 from rx.subjects import Subject
 from rx.disposable import CompositeDisposable, RefCountDisposable, SingleAssignmentDisposable
 from rx.internal.basic import identity

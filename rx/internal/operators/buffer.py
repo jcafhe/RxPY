@@ -1,7 +1,7 @@
 from typing import Callable
 
 from rx import operators as ops
-from rx.core import Observable, pipe
+from rx.internal import Observable, pipe
 
 
 def _buffer(buffer_openings=None, buffer_closing_mapper=None) -> Callable[[Observable], Observable]:
