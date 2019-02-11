@@ -1,8 +1,8 @@
 import threading
 from typing import List, Any
 
-from rx.core import abc
-from rx.core.typing import Action
+from rx.internal import abc
+from rx.internal.typing import Action
 from rx.disposable import SerialDisposable
 
 from .observerbase import ObserverBase

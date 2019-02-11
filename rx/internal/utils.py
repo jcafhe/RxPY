@@ -4,7 +4,7 @@ from rx.disposable import CompositeDisposable
 
 
 def add_ref(xs, r):
-    from rx.core import Observable
+    from rx.internal import Observable
 
     def subscribe(observer, scheduler=None):
         return CompositeDisposable(r.disposable, xs.subscribe(observer))

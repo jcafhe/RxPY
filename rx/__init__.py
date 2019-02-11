@@ -3,7 +3,7 @@
 from asyncio.futures import Future as _Future
 from typing import Iterable, Callable, Any, Optional, Union
 
-from .core import Observable, abc, typing, pipe
+from .internal import Observable, abc, typing, pipe
 
 from . import disposable
 
