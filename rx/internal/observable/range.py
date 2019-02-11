@@ -1,5 +1,4 @@
-from rx.core import typing
-from rx.core import Observable
+from rx.internal import Observable, typing
 from rx.concurrency import current_thread_scheduler
 from rx.disposable import MultipleAssignmentDisposable
 

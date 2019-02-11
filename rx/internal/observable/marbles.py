@@ -4,10 +4,10 @@ import threading
 from datetime import datetime, timedelta
 
 from rx import Observable
-from rx.core import notification
+from rx.internal import notification
 from rx.disposable import CompositeDisposable, Disposable
 from rx.concurrency import NewThreadScheduler
-from rx.core.typing import RelativeTime, AbsoluteOrRelativeTime, Scheduler
+from rx.internal.typing import RelativeTime, AbsoluteOrRelativeTime, Scheduler
 
 
 new_thread_scheduler = NewThreadScheduler()

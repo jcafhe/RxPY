@@ -1,5 +1,5 @@
 from rx import empty, defer, from_future
-from rx.core import Observable
+from rx.internal import Observable
 from rx.internal.utils import is_future
 
 

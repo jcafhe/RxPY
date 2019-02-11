@@ -1,9 +1,8 @@
 from typing import Any, Callable
 
-from rx.core import typing
-from rx.core import Observable
+from rx.internal import Observable, typing
 from rx.concurrency import current_thread_scheduler
-from rx.core.abc.scheduler import Scheduler
+from rx.internal.abc.scheduler import Scheduler
 
 
 def _return_value(value: Any, scheduler: typing.Scheduler = None) -> Observable:

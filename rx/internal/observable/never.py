@@ -1,5 +1,5 @@
 from rx.disposable import Disposable
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
 
 
 def _never() -> Observable:

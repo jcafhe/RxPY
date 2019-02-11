@@ -1,8 +1,7 @@
 from typing import Callable
 
 import rx
-from rx.core import abc
-from rx.core import Observable
+from rx.internal import Observable, abc
 from rx.internal.utils import is_future
 
 

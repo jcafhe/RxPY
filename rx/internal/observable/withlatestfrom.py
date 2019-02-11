@@ -1,6 +1,6 @@
 from rx.disposable import CompositeDisposable, SingleAssignmentDisposable
 
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _with_latest_from(parent: Observable, *sources: Observable) -> Observable:

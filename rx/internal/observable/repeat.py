@@ -2,7 +2,7 @@ from typing import Any
 
 import rx
 from rx import operators as ops
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _repeat_value(value: Any = None, repeat_count: int = None) -> Observable:

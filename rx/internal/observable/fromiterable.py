@@ -1,6 +1,6 @@
 from typing import Iterable, Any
 
-from rx.core import Observable, typing
+from rx.internal import Observable, typing
 from rx.concurrency import current_thread_scheduler
 from rx.disposable import CompositeDisposable, Disposable
 

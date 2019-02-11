@@ -1,7 +1,7 @@
 from typing import Callable
 
 from rx import throw, from_future
-from rx.core import Observable, abc
+from rx.internal import Observable, abc
 from rx.internal.utils import is_future
 
 

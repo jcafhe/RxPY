@@ -1,7 +1,7 @@
 from typing import Any
 
-from rx.core import typing
-from rx.core import Observable
+from rx.internal import typing
+from rx.internal import Observable
 
 from rx.concurrency import immediate_scheduler
 

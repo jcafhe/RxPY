@@ -1,5 +1,5 @@
 from rx import throw, from_future
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _start_async(function_async) -> Observable:

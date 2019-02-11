@@ -1,5 +1,5 @@
 from rx import to_async
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _start(func, scheduler=None) -> Observable:

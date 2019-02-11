@@ -1,7 +1,7 @@
 from typing import Callable
 
 from rx import operators as ops
-from rx.core import Observable
+from rx.internal import Observable
 from rx.concurrency import timeout_scheduler
 from rx.subjects import AsyncSubject
 

@@ -1,7 +1,7 @@
 from rx import never
 
 from rx import operators as _
-from rx.core import Observable
+from rx.internal import Observable
 
 
 def _amb(*sources: Observable) -> Observable:

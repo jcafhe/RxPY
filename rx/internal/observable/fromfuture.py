@@ -1,8 +1,7 @@
 from asyncio.futures import Future
 
 from rx.disposable import Disposable
-from rx.core import typing
-from rx.core import Observable
+from rx.internal import Observable, typing
 
 
 def _from_future(future: Future) -> Observable:
