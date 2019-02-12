@@ -18,7 +18,7 @@ def amb(*sources: Observable) -> Observable:
         An observable sequence that surfaces any of the given
         sequences, whichever reacted first.
     """
-    from .core.observable.amb import _amb
+    from .internal.observable.amb import _amb
     return _amb(*sources)
 
 
@@ -41,7 +41,7 @@ def case(mapper, sources, default_source=None) -> Observable:
     Returns:
         An observable sequence which is determined by a case statement.
     """
-    from .core.observable.case import _case
+    from .internal.observable.case import _case
     return _case(mapper, sources, default_source)
 
 
@@ -57,7 +57,7 @@ def catch(*sources: Observable) -> Observable:
         source sequences until a source sequence terminates
         successfully.
     """
-    from .core.observable.catch import _catch_with_iterable
+    from .internal.observable.catch import _catch_with_iterable
     return _catch_with_iterable(sources)
 
 
@@ -77,7 +77,7 @@ def catch_with_iterable(sources: Iterable[Observable]) -> Observable:
         source sequences until a source sequence terminates
         successfully.
     """
-    from .core.observable.catch import _catch_with_iterable
+    from .internal.observable.catch import _catch_with_iterable
     return _catch_with_iterable(sources)
 
 
@@ -99,7 +99,7 @@ def combine_latest(*sources: Observable) -> Observable:
         An observable sequence containing the result of combining
         elements of the sources into a tuple.
     """
-    from .core.observable.combinelatest import _combine_latest
+    from .internal.observable.combinelatest import _combine_latest
     return _combine_latest(*sources)
 
 
@@ -113,7 +113,7 @@ def concat(*sources: Observable) -> Observable:
         An observable sequence that contains the elements of each given
         sequence, in sequential order.
     """
-    from .core.observable.concat import _concat_with_iterable
+    from .internal.observable.concat import _concat_with_iterable
     return _concat_with_iterable(sources)
 
 
@@ -131,7 +131,7 @@ def concat_with_iterable(sources: Iterable[Observable]) -> Observable:
         An observable sequence that contains the elements of each given
         sequence, in sequential order.
     """
-    from .core.observable.concat import _concat_with_iterable
+    from .internal.observable.concat import _concat_with_iterable
     return _concat_with_iterable(sources)
 
 
@@ -150,7 +150,7 @@ def defer(observable_factory: Callable[[abc.Scheduler], Observable]) -> Observab
         An observable sequence whose observers trigger an invocation
         of the given observable factory function.
     """
-    from .core.observable.defer import _defer
+    from .internal.observable.defer import _defer
     return _defer(observable_factory)
 
 
@@ -166,7 +166,7 @@ def empty(scheduler: typing.Scheduler = None) -> Observable:
     Returns:
         An observable sequence with no elements.
     """
-    from .core.observable.empty import _empty
+    from .internal.observable.empty import _empty
     return _empty(scheduler)
 
 
@@ -206,7 +206,7 @@ def from_callable(supplier: Callable, scheduler: typing.Scheduler = None) -> Obs
         An observable sequence containing the single specified
         element derived from the supplier
     """
-    from .core.observable.returnvalue import _from_callable
+    from .internal.observable.returnvalue import _from_callable
     return _from_callable(supplier, scheduler)
 
 
@@ -225,7 +225,7 @@ def from_callback(func: Callable, mapper: typing.Mapper = None) -> Callable[[], 
         the callback, produces an Observable sequence with a single
         value of the arguments to the callback as a list.
     """
-    from .core.observable.fromcallback import _from_callback
+    from .internal.observable.fromcallback import _from_callback
     return _from_callback(func, mapper)
 
 
@@ -241,7 +241,7 @@ def from_future(future: _Future) -> Observable:
         An observable sequence which wraps the existing future success
         and failure.
     """
-    from .core.observable.fromfuture import _from_future
+    from .internal.observable.fromfuture import _from_future
     return _from_future(future)
 
 
@@ -259,7 +259,7 @@ def from_iterable(iterable: Iterable) -> Observable:
         The observable sequence whose elements are pulled from the
         given iterable sequence.
     """
-    from .core.observable.fromiterable import from_iterable as from_iterable_
+    from .internal.observable.fromiterable import from_iterable as from_iterable_
     return from_iterable_(iterable)
 
 
@@ -325,7 +325,7 @@ def from_marbles(string: str, timespan: typing.RelativeTime = 0.1, scheduler: ty
         given marble diagram string.
     """
 
-    from .core.observable.marbles import from_marbles as _from_marbles
+    from .internal.observable.marbles import from_marbles as _from_marbles
     return _from_marbles(string, timespan, lookup=lookup, error=error, scheduler=scheduler)
 
 
@@ -351,7 +351,7 @@ def generate_with_relative_time(initial_state, condition, iterate, time_mapper) 
     Returns:
         The generated sequence.
     """
-    from .core.observable.generatewithrelativetime import _generate_with_relative_time
+    from .internal.observable.generatewithrelativetime import _generate_with_relative_time
     return _generate_with_relative_time(initial_state, condition, iterate, time_mapper)
 
 
@@ -372,7 +372,7 @@ def generate(initial_state, condition, iterate) -> Observable:
     Returns:
         The generated sequence.
     """
-    from .core.observable.generate import _generate
+    from .internal.observable.generate import _generate
     return _generate(initial_state, condition, iterate)
 
 
@@ -436,7 +436,7 @@ def hot(string, timespan: typing.RelativeTime=0.1, duetime:typing.AbsoluteOrRela
         given marble diagram string.
     """
 
-    from .core.observable.marbles import hot as _hot
+    from .internal.observable.marbles import hot as _hot
     return _hot(string, timespan, duetime, lookup=lookup, error=error, scheduler=scheduler)
 
 
@@ -462,7 +462,7 @@ def if_then(condition: Callable[[], bool], then_source: Observable,
         An observable sequence which is either the then_source or
         else_source.
     """
-    from .core.observable.ifthen import _if_then
+    from .internal.observable.ifthen import _if_then
     return _if_then(condition, then_source, else_source)
 
 
@@ -482,7 +482,7 @@ def interval(period, scheduler: typing.Scheduler = None) -> Observable:
     Returns:
         An observable sequence that produces a value after each period.
     """
-    from .core.observable.interval import _interval
+    from .internal.observable.interval import _interval
     return _interval(period, scheduler)
 
 
@@ -497,7 +497,7 @@ def merge(*sources: Observable) -> Observable:
         The observable sequence that merges the elements of the
         observable sequences.
     """
-    from .core.observable.merge import _merge
+    from .internal.observable.merge import _merge
     return _merge(*sources)
 
 
@@ -508,7 +508,7 @@ def never() -> Observable:
     Returns:
         An observable sequence whose observers will never get called.
     """
-    from .core.observable.never import _never
+    from .internal.observable.never import _never
     return _never()
 
 
@@ -537,7 +537,7 @@ def on_error_resume_next(*sources: Observable) -> Observable:
         An observable sequence that concatenates the source sequences,
         even if a sequence terminates exceptionally.
     """
-    from .core.observable.onerrorresumenext import _on_error_resume_next
+    from .internal.observable.onerrorresumenext import _on_error_resume_next
     return _on_error_resume_next(*sources)
 
 
@@ -560,7 +560,7 @@ def range(start: int, stop: int = None, step: int = None, scheduler: typing.Sche
         An observable sequence that contains a range of sequential
         integral numbers.
     """
-    from .core.observable.range import _range
+    from .internal.observable.range import _range
     return _range(start, stop, step)
 
 
@@ -580,7 +580,7 @@ def return_value(value: Any, scheduler: typing.Scheduler = None) -> Observable:
         An observable sequence containing the single specified
         element.
     """
-    from .core.observable.returnvalue import _return_value
+    from .internal.observable.returnvalue import _return_value
     return _return_value(value, scheduler)
 
 
@@ -604,7 +604,7 @@ def repeat_value(value: Any = None, repeat_count: int = None) -> Observable:
         An observable sequence that repeats the given element the
         specified number of times.
     """
-    from .core.observable.repeat import _repeat_value
+    from .internal.observable.repeat import _repeat_value
     return _repeat_value(value, repeat_count)
 
 
@@ -629,7 +629,7 @@ def start(func, scheduler=None) -> Observable:
         An observable sequence exposing the function's result value,
         or an exception.
     """
-    from .core.observable.start import _start
+    from .internal.observable.start import _start
     return _start(func, scheduler)
 
 
@@ -645,7 +645,7 @@ def start_async(function_async) -> Observable:
         An observable sequence exposing the function's result value,
         or an exception.
     """
-    from .core.observable.startasync import _start_async
+    from .internal.observable.startasync import _start_async
     return _start_async(function_async)
 
 
@@ -665,7 +665,7 @@ def throw(exception: Exception, scheduler: typing.Scheduler = None) -> Observabl
         The observable sequence that terminates exceptionally with the
         specified exception object.
     """
-    from .core.observable.throw import _throw
+    from .internal.observable.throw import _throw
     return _throw(exception, scheduler)
 
 
@@ -695,7 +695,7 @@ def timer(duetime: typing.AbsoluteOrRelativeTime, period: typing.RelativeTime = 
         An observable sequence that produces a value after due time has
         elapsed and then each period.
     """
-    from .core.observable.timer import _timer
+    from .internal.observable.timer import _timer
     return _timer(duetime, period, scheduler)
 
 
@@ -718,7 +718,7 @@ def to_async(func: Callable, scheduler=None) -> Callable:
     Returns:
         Aynchronous function.
     """
-    from .core.observable.toasync import _to_async
+    from .internal.observable.toasync import _to_async
     return _to_async(func, scheduler)
 
 
@@ -740,7 +740,7 @@ def using(resource_factory: Callable[[], typing.Disposable], observable_factory:
         An observable sequence whose lifetime controls the lifetime
         of the dependent resource object.
     """
-    from .core.observable.using import _using
+    from .internal.observable.using import _using
     return _using(resource_factory, observable_factory)
 
 
@@ -758,7 +758,7 @@ def with_latest_from(*sources: Observable) -> Observable:
         An observable sequence containing the result of combining
         elements of the sources into a tuple.
     """
-    from .core.observable.withlatestfrom import _with_latest_from
+    from .internal.observable.withlatestfrom import _with_latest_from
     return _with_latest_from(*sources)
 
 
@@ -778,5 +778,5 @@ def zip(*args: Observable) -> Observable:
         An observable sequence containing the result of combining
         elements of the sources as a tuple.
     """
-    from .core.observable.zip import _zip
+    from .internal.observable.zip import _zip
     return _zip(*args)
