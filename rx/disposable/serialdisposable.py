@@ -1,8 +1,8 @@
 from threading import RLock
 from typing import Optional
 
-from rx.core import typing
-from rx.core.typing import Disposable
+from rx.internal import typing
+from rx.internal.typing import Disposable
 
 
 class SerialDisposable(Disposable):

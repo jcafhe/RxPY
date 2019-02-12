@@ -1,7 +1,6 @@
 from threading import RLock
 
-from rx.internal import noop
-from rx.core import typing
+from rx.internal import typing, noop
 
 
 class Disposable(typing.Disposable):

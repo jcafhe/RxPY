@@ -1,5 +1,5 @@
 from threading import RLock
-from rx.core.typing import Disposable
+from rx.internal.typing import Disposable
 
 
 class MultipleAssignmentDisposable(Disposable):

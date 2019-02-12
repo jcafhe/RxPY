@@ -1,4 +1,4 @@
-from rx.core import typing
+from rx.internal import typing
 
 from .disposable import Disposable
 from .booleandisposable import BooleanDisposable
