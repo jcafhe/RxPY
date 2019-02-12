@@ -4,11 +4,12 @@ from contextlib import contextmanager
 from warnings import warn
 
 import rx
-from rx.core import Observable
+from rx.internal import Observable
+from rx.internal.typing import Callable
+from rx.internal.observable.marbles import parse
+
 from rx.concurrency import NewThreadScheduler
-from rx.core.typing import Callable
 from rx.testing import TestScheduler, Recorded, ReactiveTest
-from rx.core.observable.marbles import parse
 
 new_thread_scheduler = NewThreadScheduler()
 

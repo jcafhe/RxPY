@@ -3,7 +3,7 @@ from typing import Any
 import math
 import types
 
-from rx.core.notification import OnNext, OnError, OnCompleted
+from rx.internal.notification import OnNext, OnError, OnCompleted
 from .recorded import Recorded
 from .subscription import Subscription
 

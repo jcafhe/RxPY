@@ -1,7 +1,7 @@
 from typing import Any, List
 
-from rx.core.typing import Observer
-from rx.core.notification import OnNext, OnError, OnCompleted
+from rx.internal.typing import Observer
+from rx.internal.notification import OnNext, OnError, OnCompleted
 
 from .recorded import Recorded
 
