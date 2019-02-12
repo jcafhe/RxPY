@@ -2,9 +2,8 @@ import threading
 from typing import Any, List, Optional
 
 from rx.disposable import Disposable
-from rx.core.typing import Observer, Scheduler
-from rx.core import Observable, typing
-from rx.internal import DisposedException
+from rx.internal import Observable, typing, DisposedException
+from rx.internal.typing import Observer, Scheduler
 
 from .anonymoussubject import AnonymousSubject
 from .innersubscription import InnerSubscription

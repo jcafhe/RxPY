@@ -1,9 +1,8 @@
 import threading
 
 from rx.disposable import Disposable
-from rx.core import Observable
-from rx.core.typing import Observer
-from rx.internal import DisposedException
+from rx.internal import Observable, DisposedException
+from rx.internal.typing import Observer
 
 from .innersubscription import InnerSubscription
 

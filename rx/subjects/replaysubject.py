@@ -3,11 +3,11 @@ import threading
 from typing import Any, Optional, List
 from datetime import timedelta
 
-from rx.core import Observable, typing
-from rx.core.typing import Observer
-from rx.internal import DisposedException
+from rx.internal import Observable, typing, DisposedException
+from rx.internal.typing import Observer
+from rx.internal.observer.scheduledobserver import ScheduledObserver
+
 from rx.concurrency import current_thread_scheduler
-from rx.core.observer.scheduledobserver import ScheduledObserver
 
 
 class RemovableDisposable:
