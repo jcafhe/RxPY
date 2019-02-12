@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Any
 
-from rx.core import typing
+from rx.internal import typing
 from rx.internal.exceptions import WouldBlockException
 from .schedulerbase import SchedulerBase
 

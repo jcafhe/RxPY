@@ -3,8 +3,8 @@ from typing import Any
 from datetime import datetime
 
 from rx.disposable import Disposable
-from rx.core import typing
 from rx.disposable import SingleAssignmentDisposable, CompositeDisposable
+from rx.internal import typing
 from rx.concurrency.schedulerbase import SchedulerBase
 
 log = logging.getLogger("Rx")

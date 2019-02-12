@@ -4,10 +4,10 @@ from datetime import datetime
 from typing import Any, List, Optional
 
 from rx.disposable import Disposable
-from rx.core import typing
-from rx.concurrency import ScheduledItem
+from rx.internal import typing
 from rx.internal.exceptions import DisposedException
 from rx.internal.priorityqueue import PriorityQueue
+from rx.concurrency import ScheduledItem
 
 from .schedulerbase import SchedulerBase
 

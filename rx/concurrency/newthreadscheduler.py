@@ -4,7 +4,7 @@ import threading
 from typing import List
 
 from rx.disposable import Disposable
-from rx.core import typing
+from rx.internal import typing
 from .schedulerbase import SchedulerBase
 from .eventloopscheduler import EventLoopScheduler
 

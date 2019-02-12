@@ -1,7 +1,7 @@
 from threading import Timer
 from datetime import timedelta
 
-from rx.core import typing
+from rx.internal import typing
 from rx.disposable import SingleAssignmentDisposable, CompositeDisposable, Disposable
 
 from .schedulerbase import SchedulerBase

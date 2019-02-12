@@ -3,7 +3,7 @@ from typing import Any
 from datetime import timedelta, datetime
 
 from rx.internal import PriorityQueue
-from rx.core import typing
+from rx.internal import typing
 from rx.concurrency import ScheduledItem
 from rx.concurrency.schedulerbase import SchedulerBase
 

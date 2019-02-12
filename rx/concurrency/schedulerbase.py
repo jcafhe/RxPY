@@ -2,10 +2,10 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from rx.disposable import Disposable
-from rx.core import typing
-from rx.core.typing import ScheduledAction, ScheduledPeriodicAction, TState
-from rx.disposable import SerialDisposable
+from rx.internal import typing
 from rx.internal.basic import default_now
+from rx.internal.typing import ScheduledAction, ScheduledPeriodicAction, TState
+from rx.disposable import SerialDisposable
 
 
 class SchedulerBase(typing.Scheduler):

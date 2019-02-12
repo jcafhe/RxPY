@@ -2,8 +2,7 @@ import logging
 from datetime import datetime
 from typing import Optional, Any
 
-from rx.internal import PriorityQueue, ArgumentOutOfRangeException
-from rx.core import typing
+from rx.internal import typing, PriorityQueue, ArgumentOutOfRangeException
 
 from .schedulerbase import SchedulerBase
 from .scheduleditem import ScheduledItem

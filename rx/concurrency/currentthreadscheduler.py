@@ -5,8 +5,7 @@ import threading
 from typing import Dict
 from datetime import timedelta
 
-from rx.core import typing
-from rx.internal import PriorityQueue
+from rx.internal import typing, PriorityQueue
 
 from .schedulerbase import SchedulerBase
 from .scheduleditem import ScheduledItem
