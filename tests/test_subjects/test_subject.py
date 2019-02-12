@@ -1,5 +1,5 @@
 import rx
-from rx.core import Observable, AnonymousObserver
+from rx.internal import Observable, AnonymousObserver
 
 from rx.testing import TestScheduler, ReactiveTest
 from rx.subjects import Subject

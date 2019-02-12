@@ -1,5 +1,5 @@
-from rx.core import ObserverBase, AnonymousObserver
-from rx.core.notification import OnNext, OnError, OnCompleted, from_notifier
+from rx.internal import ObserverBase, AnonymousObserver
+from rx.internal.notification import OnNext, OnError, OnCompleted, from_notifier
 from rx.internal.exceptions import CompletedException
 
 

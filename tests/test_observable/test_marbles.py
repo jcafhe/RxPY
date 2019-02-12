@@ -1,8 +1,8 @@
 import unittest
 
 import rx
-from rx.core import notification
-from rx.core.observable.marbles import parse
+from rx.internal import notification
+from rx.internal.observable.marbles import parse
 from rx.testing import TestScheduler
 from rx.testing.reactivetest import ReactiveTest
 import datetime
