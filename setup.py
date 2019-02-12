@@ -36,9 +36,9 @@ setup(
     setup_requires=['pytest-runner'],
     tests_require=['pytest', "pytest-asyncio"],
 
-    packages=['rx', 'rx.internal', 'rx.core', 'rx.core.abc',
-              'rx.core.operators', 'rx.core.observable',
-              'rx.core.observer', 'rx.core.operators.connectable',
+    packages=['rx', 'rx.internal', 'rx.internal.abc',
+              'rx.internal.operators', 'rx.internal.observable',
+              'rx.internal.observer', 'rx.internal.operators.connectable',
               'rx.concurrency', 'rx.concurrency.mainloopscheduler',
               'rx.operators', 'rx.disposable', 'rx.subjects',
               'rx.testing'],
