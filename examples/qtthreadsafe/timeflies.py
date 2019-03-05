@@ -1,29 +1,32 @@
-# -*- coding: utf-8 -*-
-
-from rx.subjects import Subject
-from rx.concurrency import QtScheduler
-from rx.concurrency.mainloopscheduler import qtthreadsafe
-from rx import concurrency
 import sys
 
+import rx
+from rx import operators as ops
+from rx.subjects import Subject
+# from rx.concurrency.mainloopscheduler import QtScheduler
+from rx.concurrency.mainloopscheduler.qtthreadsafe import QtScheduler
+from rx.concurrency import NewThreadScheduler
 try:
-    from PyQt4 import QtCore
-    from PyQt4.QtGui import QWidget, QLabel
-    from PyQt4.QtGui import QApplication
+    from PyQt5 import QtCore
+    from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 except ImportError:
     try:
-        from PyQt5 import QtCore
-        from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+        from PySide2 import QtCore
+        from PySide2.QtWidgets import QApplication, QLabel, QWidget
     except ImportError:
-        from PySide import QtCore
-        from PySide.QtGui import QWidget, QLabel
-        from PySide.QtGui import QApplication
+        try:
+            from PyQt4 import QtCore
+            from PyQt4.QtGui import QWidget, QLabel, QApplication
+        except ImportError:
+            from PySide import QtCore
+            from PySide.QtGui import QWidget, QLabel, QApplication
 
+new_thread_scheduler = NewThreadScheduler()
 
 class Window(QWidget):
 
     def __init__(self):
-        super(QWidget, self).__init__()
+        QWidget.__init__(self)
         self.setWindowTitle("Rx for Python rocks")
         self.resize(600, 600)
         self.setMouseTracking(True)
@@ -43,27 +46,33 @@ def main():
     window.show()
 
     text = 'TIME FLIES LIKE AN ARROW'
-    labels = [QLabel(char, window) for char in text]
 
-    def handle_label(i, label):
+    def on_next(info):
+        label, (x, y), i = info
+        label.move(x + i*12 + 15, y)
+        label.show()
 
-        def on_next(pos):
-            x, y = pos
-            label.move(x + i*12 + 15, y)
-            label.show()
+    def handle_label(label, i):
+        delayer = ops.delay(i * 0.100, scheduler=new_thread_scheduler)
+        mapper = ops.map(lambda xy: (label, xy, i))
 
-        disposable = (
-                window.mousemove
-#                .observe_on(concurrency.new_thread_scheduler)
-                .delay(i*100)
-                .observe_on(qtthreadsafe.QtScheduler(QtCore))
-                .subscribe(on_next)
-                )
+        return window.mousemove.pipe(
+            delayer,
+            mapper,
+            )
 
-    for i, label in enumerate(labels):
-        handle_label(i, label)
+    labeler = ops.flat_map_indexed(handle_label)
+    mapper = ops.map(lambda c: QLabel(c, window))
+
+    rx.from_(text).pipe(
+        mapper,
+        labeler,
+        ops.observe_on(scheduler),
+    # ).subscribe(on_next, on_error=print, scheduler=scheduler)
+    ).subscribe(on_next, on_error=print)
 
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()

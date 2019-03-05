@@ -1,9 +1,9 @@
 import logging
 
-from rx.core import Disposable
-from rx.disposables import SingleAssignmentDisposable, CompositeDisposable
+from rx.disposable import Disposable
+from rx.disposable import SingleAssignmentDisposable, CompositeDisposable
 from rx.concurrency.schedulerbase import SchedulerBase
-from rx import config
+# from rx import config
 
 log = logging.getLogger("Rx")
 log2 = logging.getLogger("Rx.qtschedulersafe")
@@ -108,40 +108,40 @@ def QtScheduler(QtCore):
     global glob_post_function
 
     # protect the creation of Handler from different threads
-    with config['concurrency'].RLock():
-        if glob_post_function is None:
+    # with config['concurrency'].RLock():
+    if glob_post_function is None:
 
-            # Get the current QApplication running
-            qapp = QtCore.QCoreApplication.instance()
+        # Get the current QApplication running
+        qapp = QtCore.QCoreApplication.instance()
 
-            if qapp is None:
-                etext = (
-                    "Unable to get instance of QCoreAplication. "
-                    "A QCoreApplication/QApplication must be instanciate "
-                    "before creating a rx QtScheduler "
-                    "(e.g. qapp = QtWidgets.QApplication([])."
-                    )
-                raise RuntimeError(etext)
+        if qapp is None:
+            etext = (
+                "Unable to get instance of QCoreAplication. "
+                "A QCoreApplication/QApplication must be instanciate "
+                "before creating a rx QtScheduler "
+                "(e.g. qapp = QtWidgets.QApplication([])."
+                )
+            raise RuntimeError(etext)
 
-            # create Handler & RxEvent classes
-            qevent_type = QtCore.QEvent.registerEventType()
-            RxEvent = create_RxEvent_class(QtCore, qevent_type)
-            Handler = create_RxHandler_class(QtCore)
-            log.info('QEvent type [{}] reserved for Rx.'.format(qevent_type))
+        # create Handler & RxEvent classes
+        qevent_type = QtCore.QEvent.registerEventType()
+        RxEvent = create_RxEvent_class(QtCore, qevent_type)
+        Handler = create_RxHandler_class(QtCore)
+        log.info('QEvent type [{}] reserved for Rx.'.format(qevent_type))
 
-            # create Handler on the qapplication thread
-            current_handler = Handler(None)
-            current_handler.moveToThread(qapp.thread())
+        # create Handler on the qapplication thread
+        current_handler = Handler(None)
+        current_handler.moveToThread(qapp.thread())
 #            current_handler.setParent(qapp)
-            log.info('Rx Handler successfully created.')
+        log.info('Rx Handler successfully created.')
 
-            def post_function(scheduling, args):
-                QtCore.QCoreApplication.postEvent(
-                         current_handler,
-                         RxEvent(scheduling, args),
-                         )
+        def post_function(scheduling, args):
+            QtCore.QCoreApplication.postEvent(
+                     current_handler,
+                     RxEvent(scheduling, args),
+                     )
 
-            glob_post_function = post_function
+        glob_post_function = post_function
 
     return _QtScheduler(glob_post_function)
 
@@ -169,7 +169,7 @@ class _QtScheduler(SchedulerBase):
 
         self._post(SCHEDULE_NOW, (invoke_action, timer_ptr))
 
-        return CompositeDisposable(disposable, Disposable.create(dispose))
+        return CompositeDisposable(disposable, Disposable(dispose))
 
     def schedule_relative(self, duetime, action, state=None):
         """Schedules an action to be executed after duetime.
@@ -199,7 +199,7 @@ class _QtScheduler(SchedulerBase):
 
         self._post(SCHEDULE_LATER, (invoke_action, timer_ptr, duetime))
 
-        return CompositeDisposable(disposable, Disposable.create(dispose))
+        return CompositeDisposable(disposable, Disposable(dispose))
 
     def schedule_absolute(self, duetime, action, state=None):
         """Schedules an action to be executed at duetime.
@@ -242,5 +242,5 @@ class _QtScheduler(SchedulerBase):
 
         self._post(SCHEDULE_PERIODIC, (invoke_action, timer_ptr, period))
 
-        return CompositeDisposable(disposable, Disposable.create(dispose))
+        return CompositeDisposable(disposable, Disposable(dispose))
 

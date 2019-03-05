@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (
         QApplication, QFrame, QPushButton, QProgressBar, QVBoxLayout)
 
 import rx
+from rx import operators as ops
 from rx.subjects import Subject
 from rx.concurrency.mainloopscheduler import qtthreadsafe
 
@@ -41,6 +42,8 @@ LOGGING_CONFIG = {
 }
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger()
+new_thread_scheduler = rx.concurrency.NewThreadScheduler()
+qtscheduler = qtthreadsafe.QtScheduler(QtCore)
 
 class MainFrame(QFrame):
     def __init__(self):
@@ -55,7 +58,7 @@ class MainFrame(QFrame):
         layout.addWidget(progress_bar)
         self.setLayout(layout)
 
-        qtscheduler = qtthreadsafe.QtScheduler(QtCore)
+        # qtscheduler = qtthreadsafe.QtScheduler(QtCore)
 
         trig = Subject()
         trig_button.released.connect(lambda : trig.on_next('aaa'))
@@ -65,22 +68,19 @@ class MainFrame(QFrame):
             return out
 
         def generate_sequence(x):
-            stream = (rx.Observable
-                      .interval(10, rx.concurrency.new_thread_scheduler)
-#                      .take(10)
-                      .scan(wrap, 0)
-                      .map(lambda i: -i if i < 0 else i)
-#                      .take(100)
-                      )
+            stream = rx.interval(0.010).pipe(
+                ops.scan(wrap, 0),
+                ops.map(lambda i: -i if i < 0 else i),
+                ops.take(101),
+                )
             return stream
 
-        disposable = (trig
-                      .select_switch(generate_sequence)
-#                      .do_action(lambda i: print(i))
-#                      .sample(50)
-#                      .observe_on(qtscheduler)
-                      .subscribe(lambda i: progress_bar.setValue(i))
-                      )
+        disposable = trig.pipe(
+            ops.map(generate_sequence),
+            ops.switch_latest(),
+            ops.sample(0.050),
+            ops.observe_on(qtscheduler),
+            ).subscribe(lambda i: progress_bar.setValue(i))
 
 
 if __name__ == '__main__':

@@ -13,6 +13,7 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 
 import rx
+from rx import operators as ops
 from rx.subjects import Subject
 from rx.concurrency.mainloopscheduler import qtthreadsafe
 
@@ -65,8 +66,7 @@ class RenderArea(QFrame):
         qsize = self.size()
         global_size = (qsize.width(), qsize.height())
 
-        x = self._xy[0]
-        y = self._xy[1]
+        x, y = self._xy
 
         rect_wh = (
                 int(0.2 * global_size[0]),
@@ -103,6 +103,8 @@ class RenderArea(QFrame):
         self.mouse_press.emit()
 
 
+new_thread_scheduler = rx.concurrency.NewThreadScheduler()
+
 class MainFrame(QFrame):
     def __init__(self):
         QFrame.__init__(self)
@@ -117,8 +119,8 @@ class MainFrame(QFrame):
         trig_button.released.connect(lambda : trig.on_next(0))
         render_area.mouse_press.connect(lambda : trig.on_next(0))
 
-        period = 0.010
-        frequency = 0.3
+        period = 1/60.0
+        frequency = 0.5
 
         pulsation = 2 * math.pi * frequency
 
@@ -127,25 +129,19 @@ class MainFrame(QFrame):
             y = 0.5 * math.cos(pulsation * t) + 0.5
             return (x, y)
 
-
         def produce_coordinates(*args):
-            coordinates = (
-                    rx.Observable
-                    .interval(int(period * 1000.0), rx.concurrency.new_thread_scheduler)
-                    .scan(lambda last, _: last + period, 0.0)
-                    .map(calculate_xy)
-                    )
+            coordinates = rx.interval(period, new_thread_scheduler).pipe(
+                ops.scan(lambda last, _: last + period, 0.0),
+                ops.map(calculate_xy),
+                )
             return coordinates
 
-        disposable = (
-                trig
-                .start_with(0)
-                .select_switch(produce_coordinates)
-                .observe_on(qtthreadsafe.QtScheduler(QtCore))
-                .subscribe(render_area.draw_coordinates)
-                )
-
-
+        disposable = trig.pipe(
+            ops.start_with(0),
+            ops.map(produce_coordinates),
+            ops.switch_latest(),
+            ops.observe_on(qtthreadsafe.QtScheduler(QtCore)),
+            ).subscribe(render_area.draw_coordinates),
 
 
 if __name__ == '__main__':
