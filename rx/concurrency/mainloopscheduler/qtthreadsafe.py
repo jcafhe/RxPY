@@ -108,20 +108,7 @@ def QtScheduler(QtCore):
     global glob_post_function
 
     # protect the creation of Handler from different threads
-    # with config['concurrency'].RLock():
     if glob_post_function is None:
-
-        # Get the current QApplication running
-        qapp = QtCore.QCoreApplication.instance()
-
-        if qapp is None:
-            etext = (
-                "Unable to get instance of QCoreAplication. "
-                "A QCoreApplication/QApplication must be instanciate "
-                "before creating a rx QtScheduler "
-                "(e.g. qapp = QtWidgets.QApplication([])."
-                )
-            raise RuntimeError(etext)
 
         # create Handler & RxEvent classes
         qevent_type = QtCore.QEvent.registerEventType()
@@ -131,8 +118,6 @@ def QtScheduler(QtCore):
 
         # create Handler on the qapplication thread
         current_handler = Handler(None)
-        current_handler.moveToThread(qapp.thread())
-#            current_handler.setParent(qapp)
         log.info('Rx Handler successfully created.')
 
         def post_function(scheduling, args):
@@ -159,7 +144,6 @@ class _QtScheduler(SchedulerBase):
         log2.debug('shedule')
 
         def invoke_action():
-#            disposable.disposable = action(scheduler, state)
             disposable.disposable = self.invoke_action(action, state)
 
         timer_ptr = [None]
@@ -243,4 +227,3 @@ class _QtScheduler(SchedulerBase):
         self._post(SCHEDULE_PERIODIC, (invoke_action, timer_ptr, period))
 
         return CompositeDisposable(disposable, Disposable(dispose))
-
