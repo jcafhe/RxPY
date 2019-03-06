@@ -1,7 +1,8 @@
 import logging
 
-from rx.disposable import Disposable
-from rx.disposable import SingleAssignmentDisposable, CompositeDisposable
+from rx.core import typing
+from rx.core.typing import AbsoluteTime, RelativeTime, TState, ScheduledAction, ScheduledPeriodicAction
+from rx.disposable import Disposable, SingleAssignmentDisposable, CompositeDisposable
 from rx.concurrency.schedulerbase import SchedulerBase
 
 log = logging.getLogger(__name__)
@@ -128,7 +129,7 @@ class _QtScheduler(SchedulerBase):
     def __init__(self, post_function):
         self._post = post_function
 
-    def schedule(self, action, state=None):
+    def schedule(self, action: ScheduledAction, state: TState = None):
         """Schedules an action to be executed."""
         sad = SingleAssignmentDisposable()
         is_disposed = False
@@ -146,18 +147,14 @@ class _QtScheduler(SchedulerBase):
 
         return CompositeDisposable(sad, Disposable(dispose))
 
-    def schedule_relative(self, duetime, action, state=None):
+    def schedule_relative(self, duetime: RelativeTime, action: ScheduledAction,
+                          state: TState = None):
         """Schedules an action to be executed after duetime.
+        """
 
-        Keyword arguments:
-        duetime -- {timedelta} Relative time after which to execute the action.
-        action -- {Function} Action to be executed.
-
-        Returns {Disposable} The disposable object used to cancel the scheduled
-        action (best effort)."""
         duetime = int(self.to_seconds(duetime) * 1000.0)
 
-        if duetime == 0:
+        if duetime <= 0:
             return self.schedule(action, state)
 
         scheduler = self
@@ -176,31 +173,19 @@ class _QtScheduler(SchedulerBase):
 
         return CompositeDisposable(sad, Disposable(dispose))
 
-    def schedule_absolute(self, duetime, action, state=None):
+    def schedule_absolute(self, duetime: AbsoluteTime, action: ScheduledAction,
+                          state: TState = None) -> typing.Disposable:
         """Schedules an action to be executed at duetime.
-
-        Keyword arguments:
-        duetime -- {datetime} Absolute time after which to execute the action.
-        action -- {Function} Action to be executed.
-
-        Returns {Disposable} The disposable object used to cancel the scheduled
-        action (best effort)."""
+        """
 
         duetime = self.to_datetime(duetime) - self.now
         return self.schedule_relative(duetime, action, state)
 
-    def schedule_periodic(self, period, action, state=None):
+    def schedule_periodic(self, period: RelativeTime, action: ScheduledPeriodicAction,
+                          state: TState = None) -> typing.Disposable:
         """Schedules a periodic piece of work to be executed in the Qt
         mainloop.
-
-        Keyword arguments:
-        period -- Period in milliseconds for running the work periodically.
-        action -- Action to be executed.
-        state -- [Optional] Initial state passed to the action upon the first
-            iteration.
-
-        Returns the disposable object used to cancel the scheduled recurring
-        action (best effort)."""
+        """
 
         period = int(self.to_seconds(period)*1000.0)
         sad = SingleAssignmentDisposable()
