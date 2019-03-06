@@ -3,32 +3,29 @@ import logging
 from rx.disposable import Disposable
 from rx.disposable import SingleAssignmentDisposable, CompositeDisposable
 from rx.concurrency.schedulerbase import SchedulerBase
-# from rx import config
 
-log = logging.getLogger("Rx")
-log2 = logging.getLogger("Rx.qtschedulersafe")
+log = logging.getLogger(__name__)
 
 """
-The scheduler posts custom events (RxEvent) to a handler (RxHandler) which
-lives on the same qthread as the QApplication or QCoreApplication. RxEvents
-are posted using the postEvent mechanism (thread-safe). These events hold
-timing informations and the function to be invoked.
+The scheduler posts custom events (RxEvent) to a single handler (RxHandler).
+RxEvents are posted using the postEvent mechanism (thread-safe).
+These events hold timing informations and function to be invoked.
 
-Custom Qt classes (RxEvent & RxHandler) are defined on runtime to avoid import
+Custom Qt classes (RxEvent & RxHandler) are defined at runtime to avoid import
 issues.
 
 Limitations:
-    Disposables can't be disposed after the qt main loop exit (i.e. return
+    Disposables can't be disposed after the Qt event loop exits (i.e. return
     of app.exec_()).
 
 """
 
 glob_post_function = None
 
-SCHEDULE_NOW = 'Rx.SCHEDULE_NOW'            # args: (invoke_action, timer_ptr)
-SCHEDULE_LATER = 'Rx.SCHEDULE_LATER'        # args; (invoke_action, timer_ptr, duetime)
+SCHEDULE = 'Rx.SCHEDULE'                    # args: (invoke_action,)
+SCHEDULE_RELATIVE = 'Rx.SCHEDULE_RELATIVE'  # args; (invoke_action, duetime)
 SCHEDULE_PERIODIC = 'Rx.SCHEDULE_PERIODIC'  # args; (invoke_action, timer_ptr, period)
-DISPOSE = 'Rx.DISPOSE'                      # args: (timer_ptr,)
+DISPOSE_PERIODIC = 'Rx.DISPOSE_PERIODIC'    # args: (timer_ptr,)
 
 
 def create_RxEvent_class(QtCore, qevent_type):
@@ -49,55 +46,51 @@ def create_RxHandler_class(QtCore):
 
     class RxHandler(QtCore.QObject):
         """
-        Handles rx events posted on the qt application main loop and
-        triggers QTimers in the main thread.
+        Handles rx events posted on Qt event loop and
+        invokes actions at duetime in the main thread.
         """
 
-        def __init__(self, parent):
+        def __init__(self, parent=None):
             QtCore.QObject.__init__(self, parent)
+            self._periodic_timers = set()
 
-            def schedule_now(args):
-                invoke_action, timer_ptr = args
+            def schedule(invoke_action):
+                # no timer needed: message already passed thru qt event loop
                 invoke_action()
 
-            def schedule_later(args):
-                invoke_action, timer_ptr, duetime = args
-                qtimer = QtCore.QTimer()
-                qtimer.setSingleShot(True)
-                qtimer.timeout.connect(invoke_action)
-                timer_ptr[0] = qtimer
-                qtimer.start(duetime)
+            def schedule_relative(invoke_action, duetime):
+                QtCore.QTimer.singleShot(duetime, invoke_action)
 
-            def schedule_periodic(args):
-                invoke_action, timer_ptr, period = args
+            def schedule_periodic(invoke_action, timer_ptr, period):
                 qtimer = QtCore.QTimer()
                 qtimer.setSingleShot(False)
                 qtimer.setInterval(period)
                 qtimer.timeout.connect(invoke_action)
                 timer_ptr[0] = qtimer
+                self._periodic_timers.add(qtimer)
                 qtimer.start()
 
-            def dispose(args):
-                timer_ptr, = args
+            def dispose_periodic(timer_ptr):
                 try:
+                    self._periodic_timers.remove(timer_ptr[0])
                     timer_ptr[0].stop()
-                    log2.debug('dispose timer_ptr:{}'.format(timer_ptr))
-                except AttributeError:
-                    log2.debug('dispose skipped for '
-                               'timer_ptr:{}'.format(timer_ptr))
+                    timer_ptr[0].deleteLater()
+                    log.debug('delete timer_ptr:{}'.format(timer_ptr))
+                except KeyError:
+                    log.warning('dispose skipped for timer_ptr:{}'.format(timer_ptr))
 
             self.dispatcher = {
-                    SCHEDULE_NOW: schedule_now,
-                    SCHEDULE_LATER: schedule_later,
+                    SCHEDULE: schedule,
+                    SCHEDULE_RELATIVE: schedule_relative,
                     SCHEDULE_PERIODIC: schedule_periodic,
-                    DISPOSE: dispose
+                    DISPOSE_PERIODIC: dispose_periodic,
                     }
 
         def event(self, event):
             scheduling = event.scheduling
             args = event.args
 
-            self.dispatcher[scheduling](args)
+            self.dispatcher[scheduling](*args)
             return True
 
     return RxHandler
@@ -107,7 +100,6 @@ def QtScheduler(QtCore):
     """A scheduler for a PyQt4/PyQt5/PySide event loop."""
     global glob_post_function
 
-    # protect the creation of Handler from different threads
     if glob_post_function is None:
 
         # create Handler & RxEvent classes
@@ -116,15 +108,14 @@ def QtScheduler(QtCore):
         Handler = create_RxHandler_class(QtCore)
         log.info('QEvent type [{}] reserved for Rx.'.format(qevent_type))
 
-        # create Handler on the qapplication thread
         current_handler = Handler(None)
         log.info('Rx Handler successfully created.')
 
-        def post_function(scheduling, args):
+        def post_function(scheduling, *args):
             QtCore.QCoreApplication.postEvent(
-                     current_handler,
-                     RxEvent(scheduling, args),
-                     )
+                current_handler,
+                RxEvent(scheduling, args),
+                )
 
         glob_post_function = post_function
 
@@ -139,21 +130,21 @@ class _QtScheduler(SchedulerBase):
 
     def schedule(self, action, state=None):
         """Schedules an action to be executed."""
-        disposable = SingleAssignmentDisposable()
-
-        log2.debug('shedule')
+        sad = SingleAssignmentDisposable()
+        is_disposed = False
+        scheduler = self
 
         def invoke_action():
-            disposable.disposable = self.invoke_action(action, state)
-
-        timer_ptr = [None]
+            if not is_disposed:
+                sad.disposable = action(scheduler, state)
 
         def dispose():
-            self._post(DISPOSE, (timer_ptr,))
+            nonlocal is_disposed
+            is_disposed = True
 
-        self._post(SCHEDULE_NOW, (invoke_action, timer_ptr))
+        self._post(SCHEDULE, invoke_action)
 
-        return CompositeDisposable(disposable, Disposable(dispose))
+        return CompositeDisposable(sad, Disposable(dispose))
 
     def schedule_relative(self, duetime, action, state=None):
         """Schedules an action to be executed after duetime.
@@ -164,26 +155,26 @@ class _QtScheduler(SchedulerBase):
 
         Returns {Disposable} The disposable object used to cancel the scheduled
         action (best effort)."""
-        duetime = self.to_relative(duetime)
+        duetime = int(self.to_seconds(duetime) * 1000.0)
 
         if duetime == 0:
             return self.schedule(action, state)
 
-        disposable = SingleAssignmentDisposable()
-
-        log2.debug('shedule relative duetime: {}'.format(duetime))
+        scheduler = self
+        is_disposed = False
+        sad = SingleAssignmentDisposable()
 
         def invoke_action():
-            disposable.disposable = self.invoke_action(action, state)
-
-        timer_ptr = [None]
+            if not is_disposed:
+                sad.disposable = action(scheduler, state)
 
         def dispose():
-            self._post(DISPOSE, (timer_ptr,))
+            nonlocal is_disposed
+            is_disposed = True
 
-        self._post(SCHEDULE_LATER, (invoke_action, timer_ptr, duetime))
+        self._post(SCHEDULE_RELATIVE, invoke_action, duetime)
 
-        return CompositeDisposable(disposable, Disposable(dispose))
+        return CompositeDisposable(sad, Disposable(dispose))
 
     def schedule_absolute(self, duetime, action, state=None):
         """Schedules an action to be executed at duetime.
@@ -195,7 +186,7 @@ class _QtScheduler(SchedulerBase):
         Returns {Disposable} The disposable object used to cancel the scheduled
         action (best effort)."""
 
-        duetime = self.to_datetime(duetime)
+        duetime = self.to_datetime(duetime) - self.now
         return self.schedule_relative(duetime, action, state)
 
     def schedule_periodic(self, period, action, state=None):
@@ -210,20 +201,19 @@ class _QtScheduler(SchedulerBase):
 
         Returns the disposable object used to cancel the scheduled recurring
         action (best effort)."""
-        log2.debug('shedule periodic')
 
-        disposable = SingleAssignmentDisposable()
-
-        periodic_state = [state]
+        period = int(self.to_seconds(period)*1000.0)
+        sad = SingleAssignmentDisposable()
+        timer_ptr = [None]
+        periodic_state = state
 
         def invoke_action():
-            periodic_state[0] = action(periodic_state[0])
-
-        timer_ptr = [None]
+            nonlocal periodic_state
+            periodic_state = action(periodic_state)
 
         def dispose():
-            self._post(DISPOSE, (timer_ptr,))
+            self._post(DISPOSE_PERIODIC, timer_ptr)
 
-        self._post(SCHEDULE_PERIODIC, (invoke_action, timer_ptr, period))
+        self._post(SCHEDULE_PERIODIC, invoke_action, timer_ptr, period)
 
-        return CompositeDisposable(disposable, Disposable(dispose))
+        return CompositeDisposable(sad, Disposable(dispose))

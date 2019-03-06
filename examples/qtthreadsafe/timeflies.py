@@ -1,11 +1,12 @@
 import sys
+import logging
 
 import rx
 from rx import operators as ops
 from rx.subjects import Subject
 # from rx.concurrency.mainloopscheduler import QtScheduler
 from rx.concurrency.mainloopscheduler.qtthreadsafe import QtScheduler
-from rx.concurrency import NewThreadScheduler
+
 try:
     from PyQt5 import QtCore
     from PyQt5.QtWidgets import QApplication, QWidget, QLabel
@@ -21,8 +22,7 @@ except ImportError:
             from PySide import QtCore
             from PySide.QtGui import QWidget, QLabel, QApplication
 
-new_thread_scheduler = NewThreadScheduler()
-
+logging.basicConfig(level='INFO')
 class Window(QWidget):
 
     def __init__(self):
@@ -53,7 +53,7 @@ def main():
         label.show()
 
     def handle_label(label, i):
-        delayer = ops.delay(i * 0.100, scheduler=new_thread_scheduler)
+        delayer = ops.delay(i * 0.100)  # use Timeout scheduler by default
         mapper = ops.map(lambda xy: (label, xy, i))
 
         return window.mousemove.pipe(
@@ -68,7 +68,6 @@ def main():
         mapper,
         labeler,
         ops.observe_on(scheduler),
-    # ).subscribe(on_next, on_error=print, scheduler=scheduler)
     ).subscribe(on_next, on_error=print)
 
     sys.exit(app.exec_())

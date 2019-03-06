@@ -40,7 +40,7 @@ LOGGING_CONFIG = {
         },
         'Rx': {
             'handlers': ['default'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False
         },
     }
@@ -119,7 +119,7 @@ class MainFrame(QFrame):
         trig_button.released.connect(lambda : trig.on_next(0))
         render_area.mouse_press.connect(lambda : trig.on_next(0))
 
-        period = 1/60.0
+        period = 1/120.0
         frequency = 0.5
 
         pulsation = 2 * math.pi * frequency
@@ -130,7 +130,7 @@ class MainFrame(QFrame):
             return (x, y)
 
         def produce_coordinates(*args):
-            coordinates = rx.interval(period, new_thread_scheduler).pipe(
+            coordinates = rx.interval(period, rx.concurrency.timeout_scheduler).pipe(
                 ops.scan(lambda last, _: last + period, 0.0),
                 ops.map(calculate_xy),
                 )
@@ -141,8 +141,7 @@ class MainFrame(QFrame):
             ops.map(produce_coordinates),
             ops.switch_latest(),
             ops.observe_on(qtthreadsafe.QtScheduler(QtCore)),
-            ).subscribe(render_area.draw_coordinates),
-
+            ).subscribe(render_area.draw_coordinates)
 
 if __name__ == '__main__':
     qapp = QApplication([])

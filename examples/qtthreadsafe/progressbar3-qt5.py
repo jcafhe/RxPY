@@ -35,14 +35,14 @@ LOGGING_CONFIG = {
         },
         'Rx': {
             'handlers': ['default'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False
         },
     }
 }
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger()
-new_thread_scheduler = rx.concurrency.NewThreadScheduler()
+
 qtscheduler = qtthreadsafe.QtScheduler(QtCore)
 
 class MainFrame(QFrame):
@@ -58,7 +58,6 @@ class MainFrame(QFrame):
         layout.addWidget(progress_bar)
         self.setLayout(layout)
 
-        # qtscheduler = qtthreadsafe.QtScheduler(QtCore)
 
         trig = Subject()
         trig_button.released.connect(lambda : trig.on_next('aaa'))
