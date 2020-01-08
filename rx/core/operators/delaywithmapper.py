@@ -33,10 +33,10 @@ def _delay_with_mapper(subscription_delay=None, delay_duration_mapper=None) -> C
 
         def subscribe(observer, scheduler=None):
             delays = CompositeDisposable()
-            at_end = [False]
+            at_end = False
 
             def done():
-                if (at_end[0] and delays.length == 0):
+                if (at_end and delays.length == 0):
                     observer.on_completed()
 
             subscription = SerialDisposable()
@@ -65,7 +65,8 @@ def _delay_with_mapper(subscription_delay=None, delay_duration_mapper=None) -> C
                     d.disposable = delay.subscribe_(on_next, observer.on_error, on_completed, scheduler)
 
                 def on_completed():
-                    at_end[0] = True
+                    nonlocal at_end
+                    at_end = True
                     subscription.dispose()
                     done()
 
