@@ -43,13 +43,13 @@ def _timeout_with_mapper(first_timeout: Optional[Observable] = None,
             subscription.disposable = original
 
             switched = False
-            _id = [0]
+            _id = 0
 
             def set_timer(timeout: Observable) -> None:
-                my_id = _id[0]
+                my_id = _id
 
                 def timer_wins():
-                    return _id[0] == my_id
+                    return _id == my_id
 
                 d = SingleAssignmentDisposable()
                 timer.disposable = d
@@ -73,9 +73,10 @@ def _timeout_with_mapper(first_timeout: Optional[Observable] = None,
             set_timer(first_timeout)
 
             def observer_wins():
+                nonlocal _id
                 res = not switched
                 if res:
-                    _id[0] += 1
+                    _id += 1
 
                 return res
 
