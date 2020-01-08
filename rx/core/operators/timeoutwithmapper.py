@@ -66,7 +66,7 @@ def _timeout_with_mapper(first_timeout: Optional[Observable] = None,
 
                 def on_completed():
                     if timer_wins():
-                        subscription.disposable = other.subscribe(observer)
+                        subscription.disposable = other.subscribe(observer, scheduler=scheduler)
 
                 d.disposable = timeout.subscribe_(on_next, on_error, on_completed, scheduler)
 
