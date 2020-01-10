@@ -1,0 +1,68 @@
+import sys
+import logging
+
+import rx
+from rx import operators as ops
+from rx.subject import Subject
+from rx.scheduler.mainloop.qtthreadsafescheduler import QtThreadSafeScheduler
+
+try:
+    from PyQt5 import QtCore
+    from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+except ImportError:
+    from PySide2 import QtCore
+    from PySide2.QtWidgets import QApplication, QLabel, QWidget
+
+
+logging.basicConfig(level='INFO')
+class Window(QWidget):
+
+    def __init__(self):
+        QWidget.__init__(self)
+        self.setWindowTitle("Rx for Python rocks")
+        self.resize(600, 600)
+        self.setMouseTracking(True)
+
+        # This Subject is used to transmit mouse moves to labels
+        self.mousemove = Subject()
+
+    def mouseMoveEvent(self, event):
+        self.mousemove.on_next((event.x(), event.y()))
+
+
+def main():
+    app = QApplication(sys.argv)
+    scheduler = QtThreadSafeScheduler(QtCore)
+
+    window = Window()
+    window.show()
+
+    text = 'TIME FLIES LIKE AN ARROW'
+
+    def on_next(info):
+        label, (x, y), i = info
+        label.move(x + i*12 + 15, y)
+        label.show()
+
+    def handle_label(label, i):
+        delayer = ops.delay(i * 0.100)  # use Timeout scheduler by default
+        mapper = ops.map(lambda xy: (label, xy, i))
+
+        return window.mousemove.pipe(
+            delayer,
+            mapper,
+            )
+
+    labeler = ops.flat_map_indexed(handle_label)
+    mapper = ops.map(lambda c: QLabel(c, window))
+
+    rx.from_(text).pipe(
+        mapper,
+        labeler,
+        ops.observe_on(scheduler), # route to qt
+    ).subscribe(on_next, on_error=print)
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
