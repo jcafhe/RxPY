@@ -8,13 +8,14 @@ from . import abc
 T_out = TypeVar('T_out', covariant=True)
 T_in = TypeVar('T_in', contravariant=True)
 TState = TypeVar('TState')  # Can be anything
+T = TypeVar('T')
 T1 = TypeVar('T1')
 T2 = TypeVar('T2')
 
 
 Action = Callable[[], None]
 
-OnNext = Callable[[Any], None]
+OnNext = Callable[[T], None]
 OnError = Callable[[Exception], None]
 OnCompleted = Callable[[], None]
 
