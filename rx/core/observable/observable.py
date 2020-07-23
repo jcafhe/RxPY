@@ -18,7 +18,7 @@ E = TypeVar('E')
 F = TypeVar('F')
 G = TypeVar('G')
 
-T = TypeVar('T')
+T = TypeVar('T', covariant=True)
 Tother = TypeVar('Tother')
 
 class Observable(typing.Observable[T]):
@@ -160,87 +160,88 @@ class Observable(typing.Observable[T]):
         # Hide the identity of the auto detach observer
         return Disposable(auto_detach_observer.dispose)
 
-    @overload
-    def pipe(self,
-             *operators: Callable[['Observable'], 'Observable']
-             ) -> 'Observable':  # pylint: disable=no-self-use
-        """Compose multiple operators left to right.
+    # @overload
+    # def pipe(self,
+    #          *operators: Callable[['Observable'], 'Observable']
+    #          ) -> 'Observable':  # pylint: disable=no-self-use
+    #     """Compose multiple operators left to right.
 
-        Composes zero or more operators into a functional composition.
-        The operators are composed from left to right. A composition of zero
-        operators gives back the original source.
+    #     Composes zero or more operators into a functional composition.
+    #     The operators are composed from left to right. A composition of zero
+    #     operators gives back the original source.
 
-        Examples:
-            >>> source.pipe() == source
-            >>> source.pipe(f) == f(source)
-            >>> source.pipe(g, f) == f(g(source))
-            >>> source.pipe(h, g, f) == f(g(h(source)))
+    #     Examples:
+    #         >>> source.pipe() == source
+    #         >>> source.pipe(f) == f(source)
+    #         >>> source.pipe(g, f) == f(g(source))
+    #         >>> source.pipe(h, g, f) == f(g(h(source)))
 
-        Args:
-            operators: Sequence of operators.
+    #     Args:
+    #         operators: Sequence of operators.
 
-        Returns:
-             The composed observable.
-        """
-        ...
+    #     Returns:
+    #          The composed observable.
+    #     """
+    #     ...
 
-    @overload
-    def pipe(self) -> 'Observable':  # pylint: disable=function-redefined, no-self-use
-        ...  # pylint: disable=pointless-statement
-
-    @overload
-    def pipe(self, op1: Callable[['Observable'], A]) -> A:  # pylint: disable=function-redefined, no-self-use
-        ...  # pylint: disable=pointless-statement
+    # @overload
+    # def pipe(self) -> 'Observable[T]':  # pylint: disable=function-redefined, no-self-use
+    #     ...  # pylint: disable=pointless-statement
 
     @overload
-    def pipe(self,  # pylint: disable=function-redefined, no-self-use
-             op1: Callable[['Observable'], A],
-             op2: Callable[[A], B]) -> B:
+    def pipe(self, # pylint: disable=function-redefined, no-self-use
+             op1: Callable[['Observable[T]'], 'Observable[A]']) -> 'Observable[A]':
         ...  # pylint: disable=pointless-statement
 
     @overload
     def pipe(self,  # pylint: disable=function-redefined, no-self-use
-             op1: Callable[['Observable'], A],
-             op2: Callable[[A], B],
-             op3: Callable[[B], C]) -> C:
+             op1: Callable[['Observable[T]'], 'Observable[A]'],
+             op2: Callable[['Observable[A]'], 'Observable[B]']) -> 'Observable[B]':
         ...  # pylint: disable=pointless-statement
 
     @overload
     def pipe(self,  # pylint: disable=function-redefined, no-self-use
-             op1: Callable[['Observable'], A],
-             op2: Callable[[A], B],
-             op3: Callable[[B], C],
-             op4: Callable[[C], D]) -> D:
+             op1: Callable[['Observable[T]'], 'Observable[A]'],
+             op2: Callable[['Observable[A]'], 'Observable[B]'],
+             op3: Callable[['Observable[B]'], 'Observable[C]']) -> 'Observable[C]':
+        ...  # pylint: disable=pointless-statement
+
+    @overload
+    def pipe(self,  # pylint: disable=function-redefined, no-self-use
+             op1: Callable[['Observable[T]'], 'Observable[A]'],
+             op2: Callable[['Observable[A]'], 'Observable[B]'],
+             op3: Callable[['Observable[B]'], 'Observable[C]'],
+             op4: Callable[['Observable[C]'], 'Observable[D]']) -> 'Observable[D]':
         ...  # pylint: disable=pointless-statement
 
     @overload
     def pipe(self,  # pylint: disable=function-redefined, no-self-use, too-many-arguments
-             op1: Callable[['Observable'], A],
-             op2: Callable[[A], B],
-             op3: Callable[[B], C],
-             op4: Callable[[C], D],
-             op5: Callable[[D], E]) -> E:
+             op1: Callable[['Observable[T]'], 'Observable[A]'],
+             op2: Callable[['Observable[A]'], 'Observable[B]'],
+             op3: Callable[['Observable[B]'], 'Observable[C]'],
+             op4: Callable[['Observable[C]'], 'Observable[D]'],
+             op5: Callable[['Observable[D]'], 'Observable[E]']) -> 'Observable[E]':
         ...  # pylint: disable=pointless-statement
 
     @overload
     def pipe(self,  # pylint: disable=function-redefined, no-self-use, too-many-arguments
-             op1: Callable[['Observable'], A],
-             op2: Callable[[A], B],
-             op3: Callable[[B], C],
-             op4: Callable[[C], D],
-             op5: Callable[[D], E],
-             op6: Callable[[E], F]) -> F:
+             op1: Callable[['Observable[T]'], 'Observable[A]'],
+             op2: Callable[['Observable[A]'], 'Observable[B]'],
+             op3: Callable[['Observable[B]'], 'Observable[C]'],
+             op4: Callable[['Observable[C]'], 'Observable[D]'],
+             op5: Callable[['Observable[D]'], 'Observable[E]'],
+             op6: Callable[['Observable[E]'], 'Observable[F]']) -> 'Observable[F]':
         ...  # pylint: disable=pointless-statement
 
     @overload
     def pipe(self,  # pylint: disable=function-redefined, no-self-use, too-many-arguments
-             op1: Callable[['Observable'], A],
-             op2: Callable[[A], B],
-             op3: Callable[[B], C],
-             op4: Callable[[C], D],
-             op5: Callable[[D], E],
-             op6: Callable[[E], F],
-             op7: Callable[[F], G]) -> G:
+             op1: Callable[['Observable[T]'], 'Observable[A]'],
+             op2: Callable[['Observable[A]'], 'Observable[B]'],
+             op3: Callable[['Observable[B]'], 'Observable[C]'],
+             op4: Callable[['Observable[C]'], 'Observable[D]'],
+             op5: Callable[['Observable[D]'], 'Observable[E]'],
+             op6: Callable[['Observable[E]'], 'Observable[F]'],
+             op7: Callable[['Observable[F]'], 'Observable[G]']) ->  'Observable[G]':
         ...  # pylint: disable=pointless-statement
 
     # pylint: disable=function-redefined
