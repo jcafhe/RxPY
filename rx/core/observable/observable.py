@@ -18,8 +18,10 @@ E = TypeVar('E')
 F = TypeVar('F')
 G = TypeVar('G')
 
+T = TypeVar('T')
+Tother = TypeVar('Tother')
 
-class Observable(typing.Observable):
+class Observable(typing.Observable[T]):
     """Observable base class.
 
     Represents a push-style collection, which you can :func:`pipe <pipe>` into
@@ -44,10 +46,10 @@ class Observable(typing.Observable):
         return self._subscribe(observer, scheduler) if self._subscribe else Disposable()
 
     def subscribe(self,  # pylint: disable=too-many-arguments,arguments-differ
-                  observer: Optional[Union[typing.Observer, typing.OnNext]] = None,
+                  observer: Optional[Union[typing.Observer[T], typing.OnNext[T]]] = None,
                   on_error: Optional[typing.OnError] = None,
                   on_completed: Optional[typing.OnCompleted] = None,
-                  on_next: Optional[typing.OnNext] = None,
+                  on_next: Optional[typing.OnNext[T]] = None,
                   *,
                   scheduler: Optional[typing.Scheduler] = None,
                   ) -> typing.Disposable:
@@ -96,7 +98,7 @@ class Observable(typing.Observable):
         return self.subscribe_(on_next, on_error, on_completed, scheduler)
 
     def subscribe_(self,
-                   on_next: Optional[typing.OnNext] = None,
+                   on_next: Optional[typing.OnNext[T]] = None,
                    on_error: Optional[typing.OnError] = None,
                    on_completed: Optional[typing.OnCompleted] = None,
                    scheduler: Optional[typing.Scheduler] = None
@@ -264,7 +266,7 @@ class Observable(typing.Observable):
         from ..pipe import pipe
         return pipe(*operators)(self)
 
-    def run(self) -> Any:
+    def run(self) -> T:
         """Run source synchronously.
 
         Subscribes to the observable source. Then blocks and waits for the
@@ -285,7 +287,7 @@ class Observable(typing.Observable):
         from ..run import run
         return run(self)
 
-    def __await__(self) -> Any:
+    def __await__(self) -> T:
         """Awaits the given observable.
 
         Returns:
@@ -295,7 +297,7 @@ class Observable(typing.Observable):
         loop = asyncio.get_event_loop()
         return iter(self.pipe(_to_future(scheduler=AsyncIOScheduler(loop=loop))))
 
-    def __add__(self, other) -> 'Observable':
+    def __add__(self, other: 'Observable[Tother]') -> 'Observable[Union[T, Tother]]':
         """Pythonic version of :func:`concat <rx.concat>`.
 
         Example:
@@ -310,7 +312,7 @@ class Observable(typing.Observable):
         from rx import concat
         return concat(self, other)
 
-    def __iadd__(self, other) -> 'Observable':
+    def __iadd__(self, other: 'Observable[Tother]') -> 'Observable[Union[T, Tother]]':
         """Pythonic use of :func:`concat <rx.concat>`.
 
         Example:
@@ -325,7 +327,7 @@ class Observable(typing.Observable):
         from rx import concat
         return concat(self, other)
 
-    def __getitem__(self, key) -> 'Observable':
+    def __getitem__(self, key) -> 'Observable[T]':
         """
         Pythonic version of :func:`slice <rx.operators.slice>`.
 
